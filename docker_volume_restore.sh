@@ -9,8 +9,9 @@ backup_path=$3
 function restore_volume {
   volume_name=$1
   backup_destination=$2
+  echo "backing up volume..."
+  echo $volume_name
 
-  docker volume create $volume_name
   docker run --rm -v $volume_name:/data ubuntu find /data -mindepth 1 -delete
   docker run --rm -v $volume_name:/data -v $backup_destination:/backup ubuntu tar -xvf /backup/$volume_name.tar -C .
 }
