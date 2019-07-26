@@ -16,8 +16,8 @@ function restore_volume {
   docker run --rm -v $volume_name:/data -v $backup_destination:/backup ubuntu tar -xvf /backup/$volume_name.tar -C .
 }
 
-
-
+echo "Creating containers without running"
+docker-compose up --no-start
 
 echo "Stopping running containers"
 docker-compose -f $compose_file_path stop
