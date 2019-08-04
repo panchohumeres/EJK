@@ -82,9 +82,12 @@ services:
       - XPACK_SECURITY_AUDIT_ENABLED=true
       - XPACK_SECURITY_AUTHC_ANONYMOUS_ROLES=dashboard_only_custom
       - XPACK_SECURITY_AUTHC_ANONYMOUS_AUTHZ_EXCEPTION=true
+      - SERVER_SSL_ENABLED=true
+      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/kibana.crt
+      - SERVER_SSL_KEY=/usr/share/kibana/config/kibana.key
     ports:
       - 5601:5601
-    volumes: ['kibana_log:/var/log', 'certs:$CERTS_DIR']
+    volumes: ['kibana_log:/var/log', 'certs:$CERTS_DIR','${PWD}/certs/kibana.crt:/usr/share/kibana/config/kibana.crt','${PWD}/certs/kibana.key:/usr/share/kibana/config/kibana.key']
 
   nginx:
     image: nginx:latest
