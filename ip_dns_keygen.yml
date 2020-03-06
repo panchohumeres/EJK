@@ -1,0 +1,17 @@
+#https://www.elastic.co/guide/en/elasticsearch/reference/current/certgen.html
+instances:
+  - name: "es01" 
+    ip: 
+      - "70.37.95.0"
+
+#  - name: "node2"
+#    ip:
+#      - "192.0.2.2"
+#      - "198.51.100.1"
+#  - name: "node3"
+#  - name: "node4"
+#    dns:
+#      - "node4.mydomain.com"
+#      - "node4.internal"
+  - name: "CN=es01,OU=IT,DC=mydomain,DC=com"
+    filename: "ipcerts"
