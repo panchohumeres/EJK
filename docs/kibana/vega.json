@@ -1,0 +1,775 @@
+# VEGA EXAMPLES
+## HISTOGRAMA SIMPLE
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "title": "Event counts from all indexes",
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "timeStamp",
+      "index": "",
+      "body": {
+        "aggs": {
+          "time_buckets": {
+            "histogram": {
+              "field": "ep1",
+              "interval": 5000,
+
+              "min_doc_count": 0
+            }
+          }
+        },
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.time_buckets.buckets"
+    }
+  },
+ "transform": [
+    {"calculate": "datum.key/100", "as": "kwh"},
+  ]
+
+  ,
+  "mark": "area",
+  "encoding": {
+    "x": {
+      "field": "kwh",
+      "type": "quantitative",
+      "axis": {"title": false},
+      "axis": {
+        "tickCount": 10
+    }},
+    "y": {
+      "field": "doc_count",
+      "type": "quantitative",
+      "axis": {"title": "Document count"}
+    },
+    "fill":{"value":"#FF8B8B"},
+    "stroke": {"value":"#501313"},
+    "opacity":{"value":0.6},
+}
+  }
+
+
+## Percentiles cumulativo
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "title": "Event counts from all indexes",
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "timeStamp",
+      "index": "",
+      "body": {
+    "size": 0,
+    "aggs" : {
+        "percents" : {
+            "percentiles" : {
+                "field" : "ep1" ,
+                "keyed": false
+            }
+        }
+    }
+}
+    },
+    "format": {
+      "property": "aggregations.percents.values"
+    },
+     "transform": [
+    {"calculate": "datum.key/1000", "as": "Kwh"},
+  ]
+  },
+  "mark": "area",
+  "encoding": {
+    "y": {
+      "field": "key",
+      "type": "quantitative",
+      "axis": {"title": false}
+    },
+    "x": {
+      "field": "value",
+      "type": "quantitative",
+      "axis": {"title": "Document count"},
+      "axis": {
+        "tickCount": 20
+    },
+    "fill": {"value": "red"},
+    "size": {"value": 5}
+  }
+}
+}
+
+## Percentiles Rule (línea recta vertical)
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "title": "Event counts from all indexes",
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "timeStamp",
+      "index": "",
+      "body": {
+    "size": 0,
+    "aggs" : {
+        "percents" : {
+            "percentiles" : {
+                "field" : "ep1" ,
+                "keyed": false
+            }
+        }
+    }
+}
+    },
+    "format": {
+      "property": "aggregations.percents.values"
+    }
+         
+  } ,"transform": [
+    {"calculate": "datum.value/1000", "as": "Kwh"}
+  ],
+  "mark": "rule",
+  "encoding": {
+    "x": {
+      "field": "Kwh",
+      "type": "quantitative",
+      "axis": {"title": "Document count"},
+    },
+    "color": {"field":"key","type":"nominal"},
+    "size": {"value": 3}
+  }
+}
+
+## Histograma - Percentiles Rule (línea recta vertical)
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "title": "Histograma y Percentiles, Distribución de Lecturas por Kwh",
+  "layer": [
+
+{"data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "timeStamp",
+      "index": "",
+      "body": {
+        "aggs": {
+          "time_buckets": {
+            "histogram": {
+              "field": "ep1",
+              "interval": 5000,
+
+              "min_doc_count": 0
+            }
+          }
+        },
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.time_buckets.buckets"
+    }
+  },
+ "transform": [
+    {"calculate": "datum.key/1000", "as": "kwh"},
+  ]
+
+  ,
+  "mark": "area",
+  "encoding": {
+    "x": {
+      "field": "kwh",
+      "type": "quantitative",
+      "scale": {"domain": [-10, 420]},
+      "axis": {"title": false},
+      "axis": {
+        "tickCount": 10
+    }},
+    "y": {
+      "field": "doc_count",
+      "type": "quantitative",
+      "axis": {"title": "Lecturas"}
+    },
+    "fill":{"value":"#74B700"},
+    "stroke": {"value":"#304B00"},
+    "opacity":{"value":0.6},
+}
+  },
+
+
+{
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "timeStamp",
+      "index": "",
+      "body": {
+    "size": 0,
+    "aggs" : {
+        "percents" : {
+            "percentiles" : {
+                "field" : "ep1" ,
+                "keyed": false
+            }
+        }
+    }
+}
+    },
+    "format": {
+      "property": "aggregations.percents.values"
+    }
+         
+  } ,"transform": [
+    {"calculate": "datum.value/1000", "as": "Kwh"}
+  ],
+  "mark": "rule",
+  "encoding": {
+    "x": {
+      "field": "Kwh",
+      "type": "quantitative",
+      "scale": {"domain": [-10, 420]},
+      "axis": {"title": "Kwh"},
+    },
+    "color": {"field":"key","type":"nominal"},
+    "size": {"value": 3}
+  }
+}
+
+]
+}
+
+
+## Comparar consumo total de dos meses
+#ignorando filtro de tiempo, pero no los del dashboard
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "title": {
+    "text": "Consumo Total por Mes (Mw)",
+    "font": "Roboto", 
+    "color": "#ffffff",
+    "fontSize": 18
+  },
+  "data": {
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes" },
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "ep1"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    }},
+     "transform": [
+    {"calculate": "datum.sum_1.value/1000000", "as": "Kwh"}
+
+  
+
+  ],
+      "config": {
+    "axis": {
+      "labelColor":"#ffffff",
+      "labelFontSize":16,
+      "labelFont":"Roboto",
+      "titleColor":"#ffffff","titleFont":"Roboto","titleFontSize":18
+    }
+  }
+  
+  ,
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "field": "Kwh",
+      "type": "quantitative",
+      "axis": {"title": false}
+    },
+    "x": {
+      "field": "key",
+      "type": "ordinal",
+      "axis": {"title": "Mes",
+      "labelExpr": "if(datum.label==10, 'Octubre', 'Septiembre')"}
+  }},
+}
+
+
+
+
+## Comparar consumo promedio de dos meses (gráfica de barras)
+#ignorando filtro de tiempo, pero no los del dashboard
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "title": {
+    "text": "Consumo Total por Mes (Millones de $ CLP)",
+    "font": "Roboto", 
+    "color": "#ffffff",
+    "fontSize": 16
+  },
+  "data": {
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes" },
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "$$$$"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    }},
+     "transform": [
+    {"calculate": "datum.sum_1.value/1000000", "as": "Kwh"}
+
+  
+
+  ],
+      "config": {
+    "axis": {
+      "labelColor":"#ffffff",
+      "labelFontSize":16,
+      "labelFont":"Roboto",
+      "titleColor":"#ffffff","titleFont":"Roboto","titleFontSize":18
+    }
+  }
+  
+  ,
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "field": "Kwh",
+      "type": "quantitative",
+      "axis": {"title": false}
+    },
+    "x": {
+      "field": "key",
+      "type": "ordinal",
+      "axis": {"title": "Mes"}
+  }},
+}
+
+
+
+
+# Building Trend Indicator with Vega https://www.elastic.co/blog/custom-vega-visualizations-in-kibana
+# COmparativo entre dos meses (Actual y Anterior)-total
+
+
+
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+    config: {
+    kibana: {
+      renderer: svg
+      }
+  },
+  "title": "",
+  "data": [{
+    "name": "values",
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes","order" : { "_key" : "desc" }},
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "$$$$"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    },
+     "transform": [
+
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+  ]},
+
+{
+      "name": "results",
+      "values": [
+        {}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "data('values')[0].sum_1.value/1000000", "as": "last"},
+        {"type": "formula", "expr": "data('values')[1].sum_1.value/1000000", "as": "prev"},
+        {"type": "formula", "expr": "datum.last>datum.prev", "as": "up"},
+        {"type": "formula", "expr": "datum.last<datum.prev", "as": "down"},
+        {
+          "type": "formula",
+          "expr": "if(datum.row_number==0, if(datum.prev==0,0,-1), (datum.last-datum.prev)/datum.last)",
+          "as": "percentChange"
+        },
+        {
+          "type": "formula",
+          
+          "expr": "if(datum.up,'',if(datum.down,'','🢝'))",
+          "as": "symbol"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+
+      "from": {"data": "results"},
+      "encode": {
+        "update": {
+
+          "text": {
+            "signal": "datum.symbol + ' ' + format(datum.last,'.2f') + ' ('+ format(datum.percentChange, '+.1%') + ')'"
+          },
+
+          "fill": {
+            "signal": "if(datum.up, '#CA0000', if(datum.down, '#00ff00', '#00ff00'))"
+          },
+
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "xc": {"signal": "width/2"},
+          "yc": {"signal": "height/2"},
+
+          "fontSize": {"signal": "min(width/10, height)/1.3"}
+        }
+      }
+    }
+  ]
+}
+
+
+
+# Building Trend Indicator with Vega https://www.elastic.co/blog/custom-vega-visualizations-in-kibana
+# COmparativo entre dos meses (Actual y Anterior)-promedio
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+  "title": "",
+  "data": [{
+    "name": "values",
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes","order" : { "_key" : "desc" }},
+            "aggs":{
+
+  "avg_1": {
+    "avg": {
+      "field": "$$$$"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    },
+     "transform": [
+
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+  ]},
+
+{
+      "name": "results",
+      "values": [
+        {}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "data('values')[0].avg_1.value*1", "as": "last"},
+        {"type": "formula", "expr": "data('values')[1].avg_1.value*1", "as": "prev"},
+        {"type": "formula", "expr": "datum.last>datum.prev", "as": "up"},
+        {"type": "formula", "expr": "datum.last<datum.prev", "as": "down"},
+        {
+          "type": "formula",
+          "expr": "if(datum.row_number==0, if(datum.prev==0,0,-1), (datum.last-datum.prev)/datum.last)",
+          "as": "percentChange"
+        },
+        {
+          "type": "formula",
+          
+          "expr": "if(datum.up,'',if(datum.down,'','🢝'))",
+          "as": "symbol"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+
+      "from": {"data": "results"},
+      "encode": {
+        "update": {
+
+          "text": {
+            "signal": "datum.symbol + ' ' + format(datum.last,'.2f') + ' ('+ format(datum.percentChange, '+.1%') + ')'"
+          },
+
+          "fill": {
+            "signal": "if(datum.up, '#CA0000', if(datum.down, '#00ff00', '#00ff00'))"
+          },
+
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "xc": {"signal": "width/2"},
+          "yc": {"signal": "height/2"},
+
+          "fontSize": {"signal": "min(width/10, height)/1.3"}
+        }
+      }
+    }
+  ]
+}
+
+# Building Trend Indicator with Vega https://www.elastic.co/blog/custom-vega-visualizations-in-kibana
+# FACTOR DE EMISIÓN: COmparativo entre dos meses (Actual y Anterior)-promedio
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+  "title": "Consumo Mensual Promedio (Kwh)",
+  "data": [{
+    "name": "values",
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes","order" : { "_key" : "desc" }},
+            "aggs":{
+
+  "avg_1": {
+    "avg": {
+      "field": "ep1"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    },
+     "transform": [
+
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+  ]},
+
+{
+      "name": "results",
+      "values": [
+        {}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "data('values')[0].avg_1.value/1000", "as": "last"},
+        {"type": "formula", "expr": "data('values')[1].avg_1.value/1000", "as": "prev"},
+        {"type": "formula", "expr": "datum.last>datum.prev", "as": "up"},
+        {"type": "formula", "expr": "datum.last<datum.prev", "as": "down"},
+        {
+          "type": "formula",
+          "expr": "if(datum.row_number==0, if(datum.prev==0,0,-1), (datum.last-datum.prev)/datum.last)",
+          "as": "percentChange"
+        },
+        {
+          "type": "formula",
+          
+          "expr": "if(datum.up,'🠹',if(datum.down,'🠻','🢝'))",
+          "as": "symbol"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+
+      "from": {"data": "results"},
+      "encode": {
+        "update": {
+
+          "text": {
+            "signal": "datum.symbol + ' ' + format(datum.last,'.2f') + ' ('+ format(datum.percentChange, '+.1%') + ')'"
+          },
+
+          "fill": {
+            "signal": "if(datum.up, '#CA0000', if(datum.down, '#ff0000', '#00ff00'))"
+          },
+
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "xc": {"signal": "width/2"},
+          "yc": {"signal": "height/2"},
+
+          "fontSize": {"signal": "min(width/10, height)/1.3"}
+        }
+      }
+    }
+  ]
+}
+
+
+# TREND INDICATOR - Total, comparando dos meses, para dos métricas
+
+
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+    config: {
+    kibana: {
+      renderer: svg
+      }
+  },
+  "title": "",
+  "data": [{
+    "name": "values",
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes","order" : { "_key" : "desc" }},
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "$$$$"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    },
+     "transform": [
+
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+  ]},
+
+{
+      "name": "results",
+      "values": [
+        {}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "data('values')[0].sum_1.value/1000000", "as": "last"},
+        {"type": "formula", "expr": "data('values')[1].sum_1.value/1000000", "as": "prev"},
+        {"type": "formula", "expr": "datum.last>datum.prev", "as": "up"},
+        {"type": "formula", "expr": "datum.last<datum.prev", "as": "down"},
+        {
+          "type": "formula",
+          "expr": "if(datum.row_number==0, if(datum.prev==0,0,-1), (datum.last-datum.prev)/datum.last)",
+          "as": "percentChange"
+        },
+        {
+          "type": "formula",
+          
+          "expr": "if(datum.up,'',if(datum.down,'','🢝'))",
+          "as": "symbol"
+        }
+      ]
+    }
+  ],
+  
+  "marks": [
+    {
+      "type": "text",
+
+      "from": {"data": "results"},
+      "encode": {
+        "update": {
+
+          "text": {
+            "signal": "datum.symbol + ' ' + format(datum.last,'.2f') + ' ('+ format(datum.percentChange, '+.1%') + ')'"
+          },
+
+          "fill": {
+            "signal": "if(datum.up, '#CA0000', if(datum.down, '#00ff00', '#00ff00'))"
+          },
+
+          "align": {"value": "middle"},
+          "baseline": {"value": "top"},
+          "xc": {"signal": "width/2"},
+          "yc": {"signal": "height/2"},
+
+          "fontSize": {"signal": "min(width/10, height)/1.3"}
+        }
+      }
+    },
+    
+    
+    {
+      "type": "text",
+
+      "from": {"data": "results"},
+      "encode": {
+        "update": {
+
+          "text": {
+            "signal": "datum.symbol + ' ' + format(datum.last,'.2f') + ' ('+ format(datum.percentChange, '+.1%') + ')'"
+          },
+
+          "fill": {
+            "signal": "if(datum.up, '#CA0000', if(datum.down, '#00ff00', '#00ff00'))"
+          },
+
+          "align": {"value": "middle"},
+          "baseline": {"value": "bottom"},
+          "xc": {"signal": "width/2"},
+          "yc": {"signal": "height/2"},
+
+
+          "fontSize": {"signal": "min(width/10, height)/1.3"}
+        }
+      }
+    }    
+    
+    
+    
+    
+    
+  ]
+}
