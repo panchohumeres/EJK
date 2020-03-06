@@ -1,0 +1,195 @@
+# TREND INDICATOR - Total, comparando dos meses, para dos métricas
+
+
+# TREND INDICATOR - Total, comparando dos meses, para dos métricas
+
+
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+    config: {
+    kibana: {
+      renderer: svg
+      }
+  },
+  "title": "",
+  "data": [
+
+
+
+    {
+    "name": "values",
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes","order" : { "_key" : "desc" }},
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "$$$$"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    },
+     "transform": [
+
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+  ]},
+
+{
+      "name": "results",
+      "values": [
+        {}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "data('values')[0].sum_1.value/1000000", "as": "last"},
+        {"type": "formula", "expr": "data('values')[1].sum_1.value/1000000", "as": "prev"},
+        {"type": "formula", "expr": "datum.last>datum.prev", "as": "up"},
+        {"type": "formula", "expr": "datum.last<datum.prev", "as": "down"},
+        {
+          "type": "formula",
+          "expr": "if(datum.row_number==0, if(datum.prev==0,0,-1), (datum.last-datum.prev)/datum.last)",
+          "as": "percentChange"
+        },
+        {
+          "type": "formula",
+          
+          "expr": "if(datum.up,'',if(datum.down,'','🢝'))",
+          "as": "symbol"
+        }
+      ]
+    }
+,
+
+
+
+
+    {
+    "name": "Mwh",
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes","order" : { "_key" : "desc" }},
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "Mw(ep1)"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    },
+     "transform": [
+
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+  ]},
+
+{
+      "name": "results_mwh",
+      "values": [
+        {}
+      ],
+      "transform": [
+        {"type": "formula", "expr": "data('Mwh')[0].sum_1.value", "as": "last_mwh"},
+        {"type": "formula", "expr": "data('Mwh')[1].sum_1.value", "as": "prev_mwh"},
+        {"type": "formula", "expr": "datum.last_mwh>datum.prev_mwh", "as": "up_mwh"},
+        {"type": "formula", "expr": "datum.last_mwh<datum.prev_mwh", "as": "down_mwh"},
+        {
+          "type": "formula",
+          "expr": "(datum.last_mwh-datum.prev_mwh)/datum.last_mwh",
+          "as": "percentChange_mwh"
+        },
+        {
+          "type": "formula",
+          
+          "expr": "if(datum.up_mwh,'',if(datum.down_mwh,'','🢝'))",
+          "as": "symbol"
+        }
+      ]
+    }
+
+
+  ],
+
+  
+  "marks": [
+    {
+      "type": "text",
+
+      "from": {"data": "results"},
+      "encode": {
+        "update": {
+
+          "text": {
+            "signal": "datum.symbol + ' ' + format(datum.last,'.2f') + ' MM $CLP '+ ' ('+ format(datum.percentChange, '+.1%') + ')'"
+          },
+
+          "fill": {
+            "signal": "if(datum.up, '#CA0000', if(datum.down, '#00ff00', '#00ff00'))"
+          },
+
+          "align": {"value": "middle"},
+          "baseline": {"value": "bottom"},
+          "xc": {"signal": "width/2"},
+          "yc": {"signal": "height/2"},
+
+          "fontSize": {"signal": "min(width/10, height)/1.3"}
+        }
+      }
+    },
+    
+    
+    {
+      "type": "text",
+
+      "from": {"data": "results_mwh"},
+      "encode": {
+        "update": {
+
+          "text": {
+            "signal": "datum.symbol + ' ' + format(datum.last_mwh,'.2f') +' MWh'+ ' ('+ format(datum.percentChange_mwh, '+.1%') + ')'"
+          },
+
+          "fill": {
+            "signal": "if(datum.up_mwh, '#CA0000', if(datum.down_mwh, '#00ff00', '#00ff00'))"
+          },
+
+          "align": {"value": "middle"},
+          "baseline": {"value": "top"},
+          "xc": {"signal": "width/2"},
+          "yc": {"signal": "height/2"},
+
+
+          "fontSize": {"signal": "min(width/10, height)/1.3"}
+        }
+      }
+    }    
+    
+    
+    
+    
+    
+  ]
+}

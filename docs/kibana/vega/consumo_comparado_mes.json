@@ -1,0 +1,173 @@
+
+#Gráfica de barras consumo total por mes comparado
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "title": {
+    "text": "Consumo Total por Mes (Millones de $ CLP)",
+    "font": "Roboto", 
+    "color": "#ffffff",
+    "fontSize": 16
+  },
+
+        "config": {
+    "axis": {
+      "labelColor":"#ffffff",
+      "labelFontSize":16,
+      "labelFont":"Roboto",
+      "titleColor":"#ffffff","titleFont":"Roboto","titleFontSize":18
+    }
+  },
+ 
+  
+  "layer":[{
+
+
+ "data": {
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes" },
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "$$$$"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    }},
+     "transform": [
+    {"calculate": "datum.sum_1.value/1000000", "as": "Kwh"}
+
+  
+
+  ],
+
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "field": "Kwh",
+      "type": "quantitative",
+      "axis": {"title": false}
+    },
+    "x": {
+      "field": "key",
+      "type": "ordinal",
+      "axis": {"title": "Mes"}
+  }
+},
+
+
+},
+
+
+
+
+{
+
+
+ "data": {
+    "url": {
+      "%context%": true,
+      
+      "index": "",
+      "body": {"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes" },
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "Mw(ep1)"
+    }
+
+            }
+        }}}}
+    },
+    "format": {
+      "property": "aggregations.filters.buckets"
+    }}
+
+  ,
+
+      "transform": [
+    {"calculate": "datum.sum_1.value", "as": "Mwh"}
+
+  
+
+  ],
+
+
+    "mark": {
+      "type": "text",
+      "align": "middle",
+      "baseline": "top",
+      "dx": -60,
+      "dy":50,
+            "font": "Roboto",
+      "fontSize": 34,
+      "fontWeight": "bold"
+
+    },
+    "encoding": {
+
+
+    "x": {
+      "field": "key",
+      "type": "ordinal",
+
+  },
+
+      "text": {"field": "Mwh", "type": "quantitative","format": ".2f"}
+    }
+},
+
+
+{
+
+
+ "data": {
+    "values": [
+      {"key":11,"a": "MWh"},
+      {"key":12,"a": "MWh"}]
+  }
+  
+
+  ,
+
+
+    "mark": {
+      "type": "text",
+      "align": "middle",
+      "baseline": "top",
+      "dx": -50,
+      "dy":90,
+            "font": "Roboto",
+      "fontSize": 34,
+      
+"fontWeight": "bold"
+    },
+    "encoding": {
+
+
+    "x": {
+      "field": "key",
+      "type": "ordinal",
+
+  },
+
+      "text": {"field": "a", "type": "ordinal"}
+    }
+},
+
+]
+}
+
