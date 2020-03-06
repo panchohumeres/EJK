@@ -1,0 +1,6 @@
+version: '3.4'
+services:
+  elastic_dump_it:
+    build:
+      context: .
+      network: host
