@@ -1,12 +1,12 @@
 version: "3"
-#inaugurando rama staging
+
 services:
 
   jupyter:
     build:
       context: ./jupyter
     ports:
-      - ${JUPYTER_PORT}:8888 #default 8888
+      - "8888:8888"
     command: jupyter-notebook --NotebookApp.password=${JUPYTER_PSSWD}
     environment:
       - MONGO_HOST=$MONGO_HOST
@@ -18,8 +18,6 @@ services:
       - ${HOST_DATA_PATH}:/data
       - certs:/certs
       - ./jupyter_config:/home/jovyan/.jupyter/
-      - ./backup_utils/kibana:/home/jovyan/work/backup_kibana
-      - ./data_dict/source:/home/jovyan/work/data_dict
 
   es01:
     #container_name: es01
@@ -31,6 +29,10 @@ services:
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD 
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es01/es01.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/es01.crt
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate 
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
@@ -39,9 +41,9 @@ services:
       - xpack.security.authc.anonymous.roles=dashboard_only_custom
       - xpack.security.authc.anonymous.authz_exception=true
 
-    volumes: ['${HOST_DATA_PATH}/data01:/usr/share/elasticsearch/data','certs:$CERTS_DIR']
+    volumes: ['${HOST_DATA_PATH}/_elastic/data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR']
     ports:
-      - ${ELASTIC_PORT}:9200 #default: 9200
+      - 9200:9200
     healthcheck:
       test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
       interval: 30s
@@ -49,7 +51,7 @@ services:
       retries: 5
 
   es02:
-    #container_name: es02#
+    #container_name: es02
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
     environment:
       - node.name=es02
@@ -58,19 +60,23 @@ services:
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es02/es02.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es02/es02.crt
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.verification_mode=certificate 
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es02/es02.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es02/es02.key
-    volumes: ['${HOST_DATA_PATH}/data02:/usr/share/elasticsearch/data','certs:$CERTS_DIR']
+    volumes: ['${HOST_DATA_PATH}/_elastic/data02:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR']
 
   kibana:
     #container_name: kibana_enc
     image: docker.elastic.co/kibana/kibana:7.2.0
     environment:
       - KIBANA_PASSWORD=${KIBANA_PASSWORD}
-      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_HOSTS=https://es01:9200
       - XPACK_SECURITY_ENABLED=true
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=$ELASTIC_PASSWORD
@@ -83,24 +89,21 @@ services:
       - XPACK_SECURITY_AUTHC_ANONYMOUS_ROLES=dashboard_only_custom
       - XPACK_SECURITY_AUTHC_ANONYMOUS_AUTHZ_EXCEPTION=true
     ports:
-      - ${KIBANA_PORT}:5601 #default 5601
-    volumes: ['${HOST_DATA_PATH}/kibana_log:/var/log', 'certs:$CERTS_DIR']
+      - 5601:5601
+    volumes: ['${HOST_DATA_PATH}/_elastic/kibana_log:/var/log', 'certs:$CERTS_DIR']
 
-  certbot:
-    image: certbot/certbot
-    restart: unless-stopped
-    volumes: ['${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot']
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-  
   nginx:
-    image: nginx:1.15-alpine
-    restart: unless-stopped
-    volumes: ['${PWD}/nginx-config/conf:/etc/nginx/conf.d','${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot',
-    '${PWD}/nginx-config/sites-enabled:/etc/nginx/sites-enabled']
+    image: nginx:latest
+    environment:
+      - KIBANA_GUEST_AUTH
     ports:
-      - 80:80
-      - 443:443
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+        - 8080:80
+    volumes:
+        - ${PWD}/nginx-config/:/etc/nginx/conf.d/
+    entrypoint: ["sh", "etc/nginx/conf.d/docker-entrypoint.sh"]
+    command: ["nginx", "-g", "daemon off;"]
+    ulimits:
+      nproc: 65535
 
 
   wait_until_ready:
@@ -108,16 +111,4 @@ services:
     command: /usr/bin/true
     depends_on: ["es01"]
 
-volumes:
-  certs:
-    driver: local
-    driver_opts:
-      type: none
-      device: $PWD/${HOST_DATA_PATH}/certs
-      o: bind
-  http_certs:
-    driver: local
-    driver_opts:
-      type: none
-      device: $PWD/${HOST_DATA_PATH}/http_certs
-      o: bind
+volumes: {"certs"}
