@@ -1,1 +1,6 @@
 backup/
+data/**
+.env
+#nginx-config/nginx.conf
+scratch.md
+.env.bak
