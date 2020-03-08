@@ -1,4 +1,3 @@
-#!/usr/bin/env sh
 set -eu
 
 #echo "${KIBANA_GUEST_AUTH}"
