@@ -108,8 +108,7 @@ services:
     ports:
       - 80:80
       - 443:443
-    command:
-      - /bin/sh -c "/etc/nginx/conf.d/nginx-docker-entrypoint.sh"
+    command: /bin/sh -c "/etc/nginx/conf.d/nginx-docker-entrypoint.sh"
 
   wait_until_ready:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
