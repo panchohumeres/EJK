@@ -93,13 +93,12 @@ services:
   nginx:
     image: nginx:1.15-alpine
     restart: unless-stopped
-    volumes: ['${PWD}/nginx-config/conf:/etc/nginx/conf.d','${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot',
-    '${PWD}/nginx-config/sites-enabled:/etc/nginx/sites-enabled']
+    volumes: ['${PWD}/nginx-config/conf:/etc/nginx/conf.d','${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot']
     ports:
       - 80:80
       - 443:443
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-
+    entrypoint:
+      - /etc/nginx/conf.d/nginx-docker-entrypoint.sh
 
   wait_until_ready:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
