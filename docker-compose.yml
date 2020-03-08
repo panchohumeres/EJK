@@ -9,17 +9,15 @@ services:
       - ${JUPYTER_PORT}:8888 #default 8888
     command: jupyter-notebook --NotebookApp.password=${JUPYTER_PSSWD}
     environment:
-      - MONGO_HOST=$MONGO_HOST
-      - MONGO_PORT=$MONGO_PORT
-      - MONGO_USER=$MONGO_USER
-      - MONGO_PSSWD=$MONGO_PSSWD
+      - ELASTIC_USER=$ELASTIC_USER
+      - ELASTIC_PASSWD=$ELASTIC_PASSWORD
+      - ELASTIC_PORT=$ELASTIC_PORT
     volumes:
       - ./notebooks:/home/jovyan/work
       - ${HOST_DATA_PATH}:/data
       - certs:/certs
       - ./jupyter_config:/home/jovyan/.jupyter/
       - ./backup_utils/kibana:/home/jovyan/work/backup_kibana
-      - ./data_dict/source:/home/jovyan/work/data_dict
 
   es01:
     #container_name: es01
