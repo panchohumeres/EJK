@@ -1,0 +1,125 @@
+upstream ${SERVER_NAME_JUPYTER} {
+        ip_hash;
+        server ${LOCALHOST}:${JUPYTER_PORT} fail_timeout=5580s max_fails=1000;
+}
+
+upstream ${SERVER_NAME_ELASTIC} {
+        ip_hash;
+        server ${LOCALHOST}:${ELASTIC_PORT} fail_timeout=5580s max_fails=1000;
+}
+
+upstream ${SERVER_NAME_KIBANA} {
+        ip_hash;
+        server ${LOCALHOST}:${KIBANA_PORT} fail_timeout=5580s max_fails=1000;
+}
+
+
+
+
+server {
+    if ($host = ${DOMAIN_JUPYTER}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+        listen 80;
+        server_name ${DOMAIN_JUPYTER};
+        return 301 https://$host$request_uri;
+        location / {
+            proxy_pass http://${SERVER_NAME_JUPYTER};
+        }
+}
+
+
+server {
+    if ($host = ${DOMAIN_ELASTIC}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+        listen 80;
+        server_name ${DOMAIN_ELASTIC};
+        return 301 https://$host$request_uri;
+        location / {
+            proxy_pass http://${SERVER_NAME_ELASTIC};
+        }
+}
+
+
+server {
+    if ($host = ${DOMAIN_KIBANA}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+        listen 80;
+        server_name ${DOMAIN_KIBANA};
+        return 301 https://$host$request_uri;
+        location / {
+            proxy_pass http://${SERVER_NAME_KIBANA};
+        }
+}
+
+server {
+    listen 443 ssl;
+    server_name ${DOMAIN_JUPYTER};
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN_JUPYTER}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN_JUPYTER}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass  http://${SERVER_NAME_JUPYTER};
+        proxy_set_header    Host                $http_host;
+        proxy_set_header    X-Real-IP           $remote_addr;
+        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+    }
+
+}
+
+
+server {
+    listen 443 ssl;
+    server_name ${DOMAIN_ELASTIC};
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN_ELASTIC}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN_ELASTIC}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass  http://${SERVER_NAME_ELASTIC};
+        proxy_set_header    Host                $http_host;
+        proxy_set_header    X-Real-IP           $remote_addr;
+        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+    }
+
+}
+
+server {
+    listen 443 ssl;
+    server_name ${DOMAIN_KIBANA};
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN_KIBANA}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN_KIBANA}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass  http://${SERVER_NAME_KIBANA};
+        proxy_set_header    Host                $http_host;
+        proxy_set_header    X-Real-IP           $remote_addr;
+        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+    }
+
+}
