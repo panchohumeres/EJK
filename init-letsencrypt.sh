@@ -4,8 +4,9 @@
 
 PARAMS=""
 while (( "$#" )); do
+  [[ $1 == --*=* ]] && set -- "${1%%=*}" "${1#*=}" "${@:2}"
   case "$1" in
-    -f|--flag-with-argument)
+    -domains |-data_path | -email)
       FARG=$2
       shift 2
       ;;
@@ -35,7 +36,7 @@ fi
 #domains=(staging.kibana.work.cl)
 rsa_key_size=4096
 #data_path="../data/certbot"
-#email="francisco@work.cl" # Adding a valid address is strongly recommended
+#email="francisco@gmail.com" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
