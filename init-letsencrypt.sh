@@ -6,7 +6,7 @@ while getopts d:p:e: option
 do 
  case "${option}" 
  in 
- d) domains=${OPTARG};; 
+ d) domains=(${OPTARG});; 
  p) data_path=${OPTARG};;
  e) email=${OPTARG};; 
  esac 
