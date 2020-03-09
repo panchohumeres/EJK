@@ -1,15 +1,41 @@
 #!/bin/bash
 # script para generar certificados letsencrypt (certbot)--->https://github.com/wmnnd/nginx-certbot
 #
+
+PARAMS=""
+while (( "$#" )); do
+  case "$1" in
+    -f|--flag-with-argument)
+      FARG=$2
+      shift 2
+      ;;
+    --) # end argument parsing
+      shift
+      break
+      ;;
+    -*|--*=) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
+# set positional arguments in their proper place
+eval set -- "$PARAMS"
+
+
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
   exit 1
 fi
 
-domains=(staging.kibana.work.cl)
+#domains=(staging.kibana.work.cl)
 rsa_key_size=4096
-data_path="../data/certbot"
-email="francisco@work.cl" # Adding a valid address is strongly recommended
+#data_path="../data/certbot"
+#email="francisco@work.cl" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
