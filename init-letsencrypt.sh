@@ -2,30 +2,15 @@
 # script para generar certificados letsencrypt (certbot)--->https://github.com/wmnnd/nginx-certbot
 #
 
-PARAMS=""
-while (( "$#" )); do
-  [[ $1 == --*=* ]] && set -- "${1%%=*}" "${1#*=}" "${@:2}"
-  case "$1" in
-    -domains |-data_path | -email)
-      FARG=$2
-      shift 2
-      ;;
-    --) # end argument parsing
-      shift
-      break
-      ;;
-    -*|--*=) # unsupported flags
-      echo "Error: Unsupported flag $1" >&2
-      exit 1
-      ;;
-    *) # preserve positional arguments
-      PARAMS="$PARAMS $1"
-      shift
-      ;;
-  esac
-done
-# set positional arguments in their proper place
-eval set -- "$PARAMS"
+while getopts d:p:e: option
+do 
+ case "${option}" 
+ in 
+ d) domains=${OPTARG};; 
+ p) data_path=${OPTARG};;
+ e) email=${OPTARG};; 
+ esac 
+done 
 
 
 if ! [ -x "$(command -v docker-compose)" ]; then
