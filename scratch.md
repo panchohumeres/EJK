@@ -85,3 +85,7 @@ nuevo index pattern 3ded1590-4ee0-11ea-bc38-a598c9e2380b 'monitors_pivot'
 
 
 "title":"stats-ch_root"},"id":"72d56610-56c7-11ea-bc38-a598c9e2380b" --->nuevo index pattern
+
+
+./init-letsencrypt.sh -domains  -data_path "../data/certbot" -email "francisco@gmail.com"
+
