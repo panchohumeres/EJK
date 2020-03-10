@@ -95,6 +95,7 @@ services:
     restart: unless-stopped
     environment:
       - LOCALHOST=${LOCALHOST}
+      - NGINX_SERVER_IP=${NGINX_SERVER_IP}
       - DOMAIN_KIBANA=$DOMAIN_KIBANA
       - DOMAIN_ELASTIC=$DOMAIN_ELASTIC
       - DOMAIN_JUPYTER=$DOMAIN_JUPYTER
