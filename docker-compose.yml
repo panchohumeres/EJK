@@ -94,6 +94,7 @@ services:
     image: nginx:1.15-alpine
     restart: unless-stopped
     environment:
+      - LOCALHOST=$LOCALHOST
       - DOMAIN_KIBANA=$DOMAIN_KIBANA
       - DOMAIN_ELASTIC=$DOMAIN_ELASTIC
       - DOMAIN_JUPYTER=$DOMAIN_JUPYTER
