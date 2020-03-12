@@ -104,10 +104,14 @@ services:
       - SERVER_NAME_KIBANA=$SERVER_NAME_KIBANA
       - SERVER_NAME_ELASTIC=$SERVER_NAME_ELASTIC
       - SERVER_NAME_JUPYTER=$SERVER_NAME_JUPYTER
-    volumes: ['${PWD}/nginx-config/conf:/etc/nginx/conf.d','${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot']
+    volumes: ['${PWD}/nginx-config/conf:/etc/nginx/conf.d','${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot',
+    '${PWD}/nginx-config/sites-enabled:/etc/nginx/sites-enabled']
     ports:
       - 80:80
       - 443:443
+      - 8888:8888
+      - 5601:5601
+      - 9200:9200
     command: "/bin/sh -c '/etc/nginx/conf.d/nginx-docker-entrypoint.sh'"
 
   wait_until_ready:
