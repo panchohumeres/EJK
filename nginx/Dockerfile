@@ -4,8 +4,6 @@ RUN apk add curl
 
 RUN apk add --update bash
 
-RUN /bin/bash
+RUN /bin/bash apt-get install systemd
 
-RUN apt-get install systemd
-
-RUN apt-get install service
+RUN /bin/bash apt-get install service
