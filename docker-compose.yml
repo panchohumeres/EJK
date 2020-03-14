@@ -91,8 +91,8 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   
   nginx:
-    image: nginx:1.15-alpine
-    restart: unless-stopped
+    build:
+      context: ./nginx
     environment:
       - LOCALHOST=$LOCALHOST
       - DOMAIN_KIBANA=$DOMAIN_KIBANA
