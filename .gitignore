@@ -4,3 +4,4 @@ data/**
 #nginx-config/nginx.conf
 scratch.md
 .env.bak
+test_bash.sh
