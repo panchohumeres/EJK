@@ -28,6 +28,7 @@ rsa_key_size=4096
 export IFS=";"
 
 for domains in $doms; do
+    $domains=(${domains})
 
     if [ -d "$data_path" ]; then
       read -p "Existing data found for $domains. Continue and replace existing certificate? (y/N) " decision
