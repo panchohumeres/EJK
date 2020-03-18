@@ -1,4 +1,5 @@
 #!/bin/bash
+# INIT-LETSENSCRYPT SCRIPT WITH PARAMETERS (FOR MULTIHOST CONFIG)
 # script para generar certificados letsencrypt (certbot)--->https://github.com/wmnnd/nginx-certbot
 #
 
