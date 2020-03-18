@@ -9,3 +9,5 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get install systemd
 
 RUN apt-get install service
+
+EXPOSE 80
