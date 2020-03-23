@@ -3,7 +3,7 @@
 # script para generar certificados letsencrypt (certbot)--->https://github.com/wmnnd/nginx-certbot
 #
 
-while getopts d:p:e: option
+while getopts d:p:e:m option
 do 
  case "${option}" 
  in 
