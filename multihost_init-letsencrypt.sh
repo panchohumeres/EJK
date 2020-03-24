@@ -18,5 +18,5 @@ export IFS=";"
 
 for d in $doms; do
     domains+=($d)
-    ./init-letsencrypt_params_TEST.sh -d $d -p $data_path -e $email
+    ./init-letsencrypt_params.sh -d $d -p $data_path -e $email
 done
