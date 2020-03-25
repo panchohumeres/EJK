@@ -17,59 +17,64 @@ upstream ${SERVER_NAME_KIBANA} {
 
 
 server {
-    if ($host = ${DOMAIN_JUPYTER}) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
+
+
 
         listen 80;
         server_name ${DOMAIN_JUPYTER};
-        return 301 https://$host$request_uri;
+        server_tokens off;
+        #return 301 https://$host$request_uri;
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
         location / {
             proxy_pass http://${SERVER_NAME_JUPYTER};
         }
 
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
+
 
 }
 
 
 server {
-    if ($host = ${DOMAIN_ELASTIC}) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
+
+
+
 
         listen 80;
         server_name ${DOMAIN_ELASTIC};
-        return 301 https://$host$request_uri;
+        server_tokens off;
+        #return 301 https://$host$request_uri;
+            location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+        
         location / {
             proxy_pass http://${SERVER_NAME_ELASTIC};
         }
 
 
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
 
 }
 
 
 server {
-    if ($host = ${DOMAIN_KIBANA}) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
+
+
 
         listen 80;
         server_name ${DOMAIN_KIBANA};
-        return 301 https://$host$request_uri;
+        server_tokens off;
+        #return 301 https://$host$request_uri;
+            location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+        
         location / {
             proxy_pass http://${SERVER_NAME_KIBANA};
         }
 
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
+
 
 }
 
