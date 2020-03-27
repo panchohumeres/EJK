@@ -7,7 +7,7 @@ services:
       context: ./jupyter
     ports:
       - ${JUPYTER_PORT}:8888 #default 8888
-    command: jupyter-notebook --NotebookApp.password=${JUPYTER_PSSWD}
+    command: jupyter-notebook --NotebookApp.password=${JUPYTER_PSSWD} --NotebookApp.allow_origin=${JUPYTER_ALLOW_ORIGIN}
     environment:
       - ELASTIC_USER=$ELASTIC_USER
       - ELASTIC_PASSWD=$ELASTIC_PASSWORD
