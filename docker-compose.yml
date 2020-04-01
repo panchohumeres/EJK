@@ -95,6 +95,7 @@ services:
       context: ./nginx
     environment:
       - LISTEN_PORT=80
+      - KIBANA_GUEST_AUTH=$KIBANA_GUEST_AUTH
       - DOMAIN_KIBANA=$DOMAIN_KIBANA
       - DOMAIN_ELASTIC=$DOMAIN_ELASTIC
       - DOMAIN_JUPYTER=$DOMAIN_JUPYTER
