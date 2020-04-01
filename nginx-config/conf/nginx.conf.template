@@ -168,7 +168,7 @@ server {
     server_tokens off;
 
     location / {
-        proxy_pass  https://${SERVER_NAME_KIBANA};
+        proxy_pass  http://${SERVER_NAME_KIBANA};
         proxy_set_header  Authorization ${KIBANA_GUEST_AUTH};
     }
 
