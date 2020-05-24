@@ -24,7 +24,6 @@ import numpy as np
 
 
 # In[11]:
-
 class elastic_connection:
     
     def __init__(self,ES_HOST,basic_auth=None,ssl_context=None):
@@ -46,7 +45,11 @@ class elastic_connection:
     def ping(self):
         print(self.es.ping())
         
-    def read_all_index(self,INDEX_NAME,n=1000,to_df=True,rw=True):
+    def list_indices(self):
+        #listar todos los índices de elasticsearch
+        return list(self.es.indices.get_alias().keys())
+        
+    def read_all_index(self,INDEX_NAME='',n=1000,to_df=True,rw=True):
         es=self.es
         res = es.search(index = INDEX_NAME,size=n,body={"query": {"match_all": {}}})
         if to_df==True:
@@ -56,6 +59,17 @@ class elastic_connection:
         else:
             return res
         
+    def search(self,INDEX_NAME,size=1000,to_df=True,rw=True,query={}):
+        es=self.es
+        res=es.search(index = INDEX_NAME,size=size,body=query)
+        if to_df==True:
+            res=self.query_to_df(res)
+        if rw==True:
+            self.docs=res
+        else:
+            return res
+        
+        
     def add_docs(self,docs):
         self.docs=docs
         
@@ -64,11 +78,14 @@ class elastic_connection:
         df = json_normalize([x['_source'] for x in res['hits']['hits']])
         return df
     
-    def test_index(self,INDEX_NAME,n=15):
+    def test_index(self,INDEX_NAME,n=15,as_df=True):
         es=self.es
         # sanity check
         res = es.search(index = INDEX_NAME,size=n, body={"query": {"match_all": {}}})
-        print(" response: '%s'" % (res))
+        if as_df==True:
+            return self.query_to_df(res)
+        else:
+            print(" response: '%s'" % (res))
         
         
     def count_documents(self,INDEX_NAME):
@@ -90,7 +107,7 @@ class elastic_connection:
         bulk_data=[]
         for idx in range(0,len(data)):
             if len(id_field)>0:
-                _id=data[idx][id_field]+'_'+str(idx)
+                _id=data[idx][id_field]
             else:
                 _id=idx
             bulk_data.append({"index":{ "_index" : INDEX_NAME, "_type" : _type, "_id" : _id}})
@@ -121,24 +138,47 @@ class elastic_connection:
             try:
                 print("\r", 'indexing chunk : '+str(idx)+' of '+str(len(chunks)) , end="")
                 res = es.bulk(index = INDEX_NAME_, body = chunks[idx],refresh = True)
-                errors=elastic_errors(res)
+                errors=self.elastic_errors(res)
                 es_errors.append(errors)
 
             except Exception as e:
                 ex={'exception':str(e),'timeStamp':strftime("%Y-%m-%d %H:%M:%S"),'index':INDEX_NAME_,
-             'init_id':chunks[idx][0]['index']['_id'],'end_id':chunks[idx][len(chunks[idx])-2]['index']['_id']}
+             'init_id':chunks[idx][0]['index']['_id'],'end_id':chunks[idx][len(chunks[idx])-2]['index']['_id'],
+                   'ndocs':len(chunks[idx])/2,
+                '_id':strftime("%Y_%m_%d_%H_%M_%S")+str(chunks[idx][0]['index']['_id'])}
                 exceptions.append(ex)
                 continue
         print('finished bulk indexing')
-        self.es_errors=pd.concat(es_errors)
-        self.exceptions=pd.DataFrame(exceptions)
+        es_errors=[x for x in es_errors if x!=None]
+        if len(es_errors)>0:
+            es_errors=pd.concat(es_errors) #ES indexing errors
+            if es_errors.shape[0]>0:
+                self.es_errors=es_errors
+                print(str(self.es_errors.shape[0])+' ES indexing errores, see index "es_errors"')
+                
+        else:
+            print('No recorded ES indexing errors')
+        if len(exceptions)>0:
+            exceptions=pd.DataFrame(exceptions) #exceptions
+            if exceptions.shape[0]>0:
+                self.exceptions=exceptions
+                self.exceptions['exception'].replace("\'",'"') #remove linespace from exceptions strings
+                print(str(self.exceptions.shape[0])+' exceptions while indexing to Elasticsearch, see index "exceptions"')
+        else:
+            print('No recorded ES indexing exceptions')
+                
+        if (len(exceptions)>0) & (len(es_errors)>0):
+            er=elastic_errors(self)
+            er.index_errors()
 
-    def elastic_errors(res):
+    def elastic_errors(self,res):
         status=[]
         ids=[]
         errors_type=[]
         errors_reason=[]
         indexes=[]
+        timeStamp=[]
+        _ids=[] #IDs con los que van a ser indexados los errores
         if res['errors']==True:
             for i in res['items']:
                 if i['index']['status']!=201:
@@ -147,13 +187,13 @@ class elastic_connection:
                     errors_type.append(i['index']['error']['type'])
                     errors_reason.append(i['index']['error']['reason'])
                     indexes.append(i['index']['_index'])
+                    timeStamp.append(strftime("%Y-%m-%d %H:%M:%S"))
+                    _ids.append(strftime("%Y_%m_%d_%H_%M_%S")+str(len(_ids)))
             
         if len(status)>0:
-            errors=pd.DataFrame([status,ids,errors_type,errors_reason,indexes],index=['status','id','error_type','error_reason','index']).T
+            errors=pd.DataFrame([_ids,status,ids,errors_type,errors_reason,indexes,timeStamp],index=['_id','status','doc_id','error_type','error_reason','index','timeStamp']).T
         else:
-            errors=pd.DataFrame([],columns=['status','id','error_type','error_reason','index'])
-    
-        return errors    
+            errors=pd.DataFrame([],columns=['_id','status','doc_id','error_type','error_reason','index','timeStamp'])
 
     def clear_index(self,INDEX_NAME):
         es=self.es
@@ -218,4 +258,29 @@ class elastic_connection:
             self.docs=docs
             return(None)
         else:
-            return docs    
+            return docs
+        
+class elastic_errors(elastic_connection):
+    
+    def __init__(self,es):
+        self.__dict__={item: value for (item, value) in es.__dict__.items() if item not in ['data','chunks'] }
+        
+
+    def index_errors(self):
+
+        def index_(es,i,data):
+            n=1500
+            id_field='_id'
+            self.add_docs(data)
+            self.bulk_data(INDEX_NAME=i[0],_type=i[1],n=n,id_field=id_field)
+            self.bulk_index()
+
+        if self.has_attribute('es_errors'):
+            i=('es_errors','errors') 
+            data=self.es_errors
+            index_(es,i,data)
+
+        if self.has_attribute('exceptions'):
+            i=('exceptions','exceptions') 
+            data=self.exceptions
+            index_(es,i,data)          
