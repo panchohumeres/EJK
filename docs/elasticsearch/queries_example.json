@@ -1,0 +1,200 @@
+## Histograma
+
+GET /_search
+{
+        "aggs": {
+          "time_buckets": {
+            "histogram": {
+              "field": "ep1",
+              "interval": 10000,
+              "min_doc_count": 0
+            }
+          }
+        },
+        "size": 0
+      }
+
+
+
+## Percentiles
+
+GET /_search
+{
+    "size": 0,
+    "aggs" : {
+        "load_time_outlier" : {
+            "percentiles" : {
+                "field" : "ep1" ,
+                "keyed": false
+            }
+        }
+    }
+}
+
+## Histograma filtrados por valores únicos de un campo
+
+GET /_search
+{"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes" },
+            "aggs":{
+              "hists":{
+            "histogram": {
+              "field": "ep1",
+              "interval": 5000,
+              "keyed": false,
+              "min_doc_count": 0
+          }
+
+            }
+        }}}}
+
+
+## Consumo total por mes
+
+GET /_search
+{"size":0,"aggs":{
+          "filters": {
+            "terms" : { "field":"mes" },
+            "aggs":{
+
+  "sum_1": {
+    "sum": {
+      "field": "ep1"
+    }
+
+            }
+        }}}}
+
+
+#consumo promedio por dia
+
+GET /_search
+{
+  "size": 0,
+
+  "aggs": {
+    "sales_per_month": {
+      "date_histogram": {
+        "field": "rootTimeStamp",
+        "calendar_interval": "day"
+      },
+      "aggs": {
+        "sales": {
+          "sum": {
+            "field": "$$$$"
+          }
+        }
+      }
+    },
+    "avg_monthly_sales": {
+      "avg_bucket": {
+        "buckets_path": "sales_per_month>sales" 
+      }
+    }
+  }
+}
+
+
+#consumo promedio por dia x mes
+
+GET /_search
+{"size": 0,
+
+  "aggs": {
+
+          "filters": {
+            "terms" : { "field":"mes" },
+            "aggs":{
+
+
+  "sum_1": {
+    "sum": {
+      "field": "Kwh(ep1)"
+    }
+  },
+  "sum_2": 
+{"cardinality" : {
+            "field" : "dia_mes",
+            "precision_threshold": 100
+            }}
+
+
+  ,
+  "division": {
+    "bucket_script": {
+      "buckets_path": {
+        "my_var1": "sum_1",
+        "my_var2": "sum_2"
+      },
+      "script": "params.my_var1 / params.my_var2"
+    }
+  }
+}
+}
+}
+}
+
+
+
+
+
+
+# dividir dos campos (suma de ellos)
+
+"aggs": {
+  "sum_1": {
+    "sum": {
+      "field": "flag_barisolve"
+    }
+  },
+  "sum_2": {
+    "sum": {
+      "field": "flag_anagrafe"
+    }
+  },
+  "division": {
+    "bucket_script": {
+      "buckets_path": {
+        "my_var1": "sum_1",
+        "my_var2": "sum_2"
+      },
+      "script": "params.my_var1 / params.my_var2"
+    }
+  }
+}
+
+
+
+GET models*/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "size": 0,
+  "aggs": {
+    "links": {
+      "terms": {
+        "field": "links.keyword",
+        "size": 10
+      }
+
+    },
+      "bucket_selector": {
+        "buckets_path": {
+          "key": "links"
+        },
+        "script": "!key.contains('foo')"
+      }
+  }
+}
+
+
+#listar index patterns por nombre y ID
+#https://github.com/elastic/kibana/issues/9212
+GET .kibana/_search
+{ "_source": ["index-pattern.title"], "query": { "term": { "type": "index-pattern" } }}
+
+#cambiar time filter field de index patterns
+POST /.kibana/_update/index-pattern:33e9f0c0-facd-11e9-a07d-2dba5adf8ca0/ 
+{ "doc": { "index-pattern": { "timeFieldName" : "rootTimeStamp" } } }
