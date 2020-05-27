@@ -1,4 +1,5 @@
 backup/
+nginx-conf/passwords
 data/**
 .env
 #nginx-config/nginx.conf
@@ -8,3 +9,4 @@ test_bash.sh
 test_bash_2.sh
 nginx-config/nginx.conf
 nginx-config/test
+nginx-config/conf/nginx.conf
