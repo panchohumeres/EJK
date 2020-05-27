@@ -17,4 +17,10 @@ services:
     working_dir: /usr/share/elasticsearch
     volumes: ['certs:/certs', '.:/usr/share/elasticsearch/config/certificates']
 
-volumes: {"certs"}
+volumes:
+  certs:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/${HOST_DATA_PATH}/certs
+      o: bind
