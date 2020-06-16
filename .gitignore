@@ -2,10 +2,9 @@ backup/
 nginx-conf/passwords
 data/**
 .env
-#nginx-config/nginx.conf
+nginx-config/nginx.conf
 scratch.md
 .env.bak
 test_bash.sh
 test_bash_2.sh
-nginx-config/nginx.conf
 nginx-config/test

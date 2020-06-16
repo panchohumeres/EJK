@@ -264,6 +264,7 @@ class elastic_errors(elastic_connection):
     
     def __init__(self,es):
         self.__dict__={item: value for (item, value) in es.__dict__.items() if item not in ['data','chunks'] }
+         
         
 
     def index_errors(self):
