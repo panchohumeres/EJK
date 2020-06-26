@@ -21,7 +21,7 @@ if [ -z "$TARGET_PSWWD" ]; then
       TARGET_PSSWD=${ELASTIC_PASSWORD}
 fi  
 
-if [ -z "$SOURCE_ENDPOINT" ]; then
+if [ -z "$SOURCE_ENDPOINT" ] && [ "$MODE" = "remote-local" ]; then
       SOURCE_ENDPOINT=${DOMAIN_ELASTIC}
 else
       SOURCE_ENDPOINT=localhost:${ELASTIC_PORT}
