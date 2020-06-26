@@ -7,17 +7,22 @@ services:
       context: ./jupyter
     ports:
       - ${JUPYTER_PORT}:8888 #default 8888
-    command: jupyter-notebook --NotebookApp.password=${JUPYTER_PSSWD} --NotebookApp.allow_origin=${JUPYTER_ALLOW_ORIGIN}
     environment:
       - ELASTIC_USER=$ELASTIC_USER
       - ELASTIC_PASSWD=$ELASTIC_PASSWORD
       - ELASTIC_PORT=$ELASTIC_PORT
+      - PASSWORD=$JUPYTER_PSSWD
+      - JUPYTER_ALLOW_ORIGIN=$JUPYTER_ALLOW_ORIGIN
+    command: /bin/sh -c "/home/jovyan/.jupyter/jupyter-docker-entrypoint.sh"
     volumes:
       - ./notebooks:/home/jovyan/ 
       - ${HOST_DATA_PATH}:/data
       - certs:/certs
-      - ./jupyter_config:/home/jovyan/.jupyter/
-      - ./backup_utils/kibana:/home/jovyan/ /backup_kibana
+      - ./jupyter:/home/jovyan/.jupyter/
+      - ./backup_utils:/home/jovyan/ /backup_kibana
+      - ./ETL:/home/jovyan/ /ETL
+      - ./modules:/home/jovyan/ /modules
+      - ./args:/home/jovyan/ /args
 
   es01:
     #container_name: es01
@@ -106,8 +111,8 @@ services:
       - SERVER_NAME_KIBANA=$SERVER_NAME_KIBANA
       - SERVER_NAME_ELASTIC=$SERVER_NAME_ELASTIC
       - SERVER_NAME_JUPYTER=$SERVER_NAME_JUPYTER
-    volumes: ['${PWD}/nginx-config/conf:/etc/nginx/conf.d','${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot',
-    '${PWD}/nginx-config/sites-enabled:/etc/nginx/sites-enabled']
+    volumes: ['${PWD}/nginx/conf:/etc/nginx/conf.d','${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot',
+    '${PWD}/nginx/sites-enabled:/etc/nginx/sites-enabled']
     ports:
       - "80:80"
       - "443:443"
@@ -125,10 +130,4 @@ volumes:
     driver_opts:
       type: none
       device: $PWD/${HOST_DATA_PATH}/certs
-      o: bind
-  http_certs:
-    driver: local
-    driver_opts:
-      type: none
-      device: $PWD/${HOST_DATA_PATH}/http_certs
       o: bind
