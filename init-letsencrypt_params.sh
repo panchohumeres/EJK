@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # INIT-LETSENSCRYPT SCRIPT WITH PARAMETERS (FOR MULTIHOST CONFIG)
 # script para generar certificados letsencrypt (certbot)--->https://github.com/wmnnd/nginx-certbot
 #
@@ -15,15 +14,13 @@ do
  esac 
 done 
 
-#echo "data path"
-#echo ${data_path}
 
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
   exit 1
 fi
 
-#domains=(staging.kibana. )
+#domains=(staging.kibana.)
 rsa_key_size=4096
 #data_path="../data/certbot"
 #email="francisco@gmail.com" # Adding a valid address is strongly recommended

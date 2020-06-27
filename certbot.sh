@@ -17,7 +17,6 @@ email=${email}
 
 export IFS=";"
 
-cd certbot
 
 for d in "${doms[@]}"; do
     echo ${d}
