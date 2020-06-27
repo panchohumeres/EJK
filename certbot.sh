@@ -11,17 +11,17 @@ set +a
 echo "                                    "
 
 
-doms=( DOMAIN_KIBANA DOMAIN_JUPYTER DOMAIN_ELASTIC )
+doms=( ${DOMAIN_KIBANA} ${DOMAIN_JUPYTER} ${DOMAIN_ELASTIC} )
 data_path=${CERTBOT_PATH}
 email=${email}
 
 export IFS=";"
 
-cd certbot
+#cd certbot
 
 for d in "${doms[@]}"; do
     echo ${d}
     echo ${email}
     echo ${data_path}
-    ./init-letsencrypt_params.sh -d $d -p $data_path -e $email
+    ./certbot/init-letsencrypt_params.sh -d ${d} -p ${data_path} -e ${email}
 done
