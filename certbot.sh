@@ -17,11 +17,11 @@ email=${email}
 
 export IFS=";"
 
-#cd certbot
+cd certbot
 
 for d in "${doms[@]}"; do
     echo ${d}
     echo ${email}
     echo ${data_path}
-    ./certbot/init-letsencrypt_params.sh -d ${d} -p ${data_path} -e ${email}
+    ./init-letsencrypt_params.sh -d ${d} -p ${data_path} -e ${email}
 done

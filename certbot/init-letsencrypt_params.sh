@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # INIT-LETSENSCRYPT SCRIPT WITH PARAMETERS (FOR MULTIHOST CONFIG)
 # script para generar certificados letsencrypt (certbot)--->https://github.com/wmnnd/nginx-certbot
 #
@@ -14,6 +15,8 @@ do
  esac 
 done 
 
+#echo "data path"
+#echo ${data_path}
 
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
