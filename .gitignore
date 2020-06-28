@@ -1,5 +1,6 @@
 backup/
 nginx-conf/passwords
+nginx/conf/nginx.conf
 data/**
 .env
 nginx-config/nginx.conf
