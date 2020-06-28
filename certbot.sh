@@ -22,5 +22,5 @@ for d in "${doms[@]}"; do
     echo ${d}
     echo ${email}
     echo ${data_path}
-    ./init-letsencrypt_params.sh -d ${d} -p ${data_path} -e ${email}
+    ./init-letsencrypt.sh -d ${d} -p ${data_path} -e ${email}
 done
