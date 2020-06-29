@@ -92,16 +92,20 @@ if [ $staging != "0" ]; then staging_arg="--staging"; fi
 
 for d in "${domains[@]}"
 do
-echo "### Requesting Let's Encrypt certificate for $d ..."
-docker-compose run --rm --entrypoint "\
-  certbot certonly --webroot -w /var/www/certbot \
-    $d \
-    $email_arg \
-    $domain_args \
-    --rsa-key-size $rsa_key_size \
-    --agree-tos \
-    --force-renewal" certbot
-echo
+  echo "### Requesting Let's Encrypt certificate for $d ..."
+  #Join $domains to -d args
+  domain_args=""
+  domain_args="$domain_args -d $d"
+
+  docker-compose run --rm --entrypoint "\
+    certbot certonly --webroot -w /var/www/certbot \
+      $staging_arg \
+      $email_arg \
+      $domain_args \
+      --rsa-key-size $rsa_key_size \
+      --agree-tos \
+      --force-renewal" certbot
+  echo
 done
 
 echo "### Reloading nginx ..."
