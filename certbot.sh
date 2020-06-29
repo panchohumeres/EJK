@@ -73,7 +73,7 @@ for d in "${domains[@]}"
 do
 echo "### Deleting dummy certificate for $d ..."
   docker-compose run --rm --entrypoint "\
-    rm -Rf /etc/letsencrypt/live/$ && \
+    rm -Rf /etc/letsencrypt/live/$d && \
     rm -Rf /etc/letsencrypt/archive/$d && \
     rm -Rf /etc/letsencrypt/renewal/$d.conf" certbot
   echo
