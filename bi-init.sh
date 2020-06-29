@@ -6,6 +6,12 @@ set +a
 
 echo "creating certs dir: "${HOST_DATA_PATH}"/certs"
 mkdir ${HOST_DATA_PATH}/certs
+echo "creating certbot dir"
+mkdir ${CERTBOT_PATH}
+echo "changing ownership of certbot dir (for docker execution)"
+sudo chmod -R g+rwx ${CERTBOT_PATH}
+sudo chgrp -R 1000 ${CERTBOT_PATH}
+sudo chown -R 1000 ${CERTBOT_PATH}
 
 
 #CREATE CERTIFICATES FOR INTERNAL ELASTICSEARCH-KIBANA COMMUNICATION (TSL LAYER)

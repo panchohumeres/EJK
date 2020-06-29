@@ -111,8 +111,9 @@ services:
       - SERVER_NAME_KIBANA=$SERVER_NAME_KIBANA
       - SERVER_NAME_ELASTIC=$SERVER_NAME_ELASTIC
       - SERVER_NAME_JUPYTER=$SERVER_NAME_JUPYTER
-    volumes: ['${PWD}/nginx/conf:/etc/nginx/conf.d','${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot',
-    '${PWD}/nginx/sites-enabled:/etc/nginx/sites-enabled']
+    volumes: ['${PWD}/nginx/conf:/etc/nginx/conf.d','${PWD}/nginx/sites-enabled:/etc/nginx/sites-enabled',
+    '${HOST_DATA_PATH}/certbot/conf:/etc/letsencrypt','${HOST_DATA_PATH}/certbot/www:/var/www/certbot',
+    ]
     ports:
       - "80:80"
       - "443:443"
