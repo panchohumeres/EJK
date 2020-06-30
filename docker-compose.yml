@@ -21,6 +21,7 @@ services:
       - ./jupyter:/home/jovyan/.jupyter/
       - ./backup_utils:/home/jovyan/ /backup_kibana
       - ./ETL:/home/jovyan/ /ETL
+      - ./CRONTAB:/home/jovyan/ /CRONTAB
       - ./modules:/home/jovyan/ /modules
       - ./args:/home/jovyan/ /args
 
