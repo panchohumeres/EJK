@@ -13,6 +13,7 @@ services:
       - ELASTIC_PORT=$ELASTIC_PORT
       - PASSWORD=$JUPYTER_PSSWD
       - JUPYTER_ALLOW_ORIGIN=$JUPYTER_ALLOW_ORIGIN
+      - DOMAIN_ELASTIC=$DOMAIN_ELASTIC
     command: /bin/sh -c "/home/jovyan/.jupyter/jupyter-docker-entrypoint.sh"
     volumes:
       - ./notebooks:/home/jovyan/ 
