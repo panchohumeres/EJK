@@ -12,7 +12,7 @@
  * "docker run -it elastic_dump sh" para correr imagen de pruebas en modo interactivo, con shell (a partir de **Dockerfile** en este directorio).
  * apk add curl ------>instalar curl en el contenedor
  * "docker run -ti --entrypoint=/bin/sh taskrabbit/elasticsearch-dump -i" para correr **imagen original (rabbit)** en modo interactivo.
- * docker run -v {CERTS_PATH_ABSOLUTE}:/{CONTAINER_MOUNT_PATH} --net =host -ti --entrypoint=/bin/sh taskrabbit/elasticsearch-dump -i ------>mismo caso anterior, montando volumen (se recomienda se llame "tmp" el del contenedor)
+ * docker run -v {CERTS_PATH_ABSOLUTE}:/{CONTAINER_MOUNT_PATH} --network=host -ti --entrypoint=/bin/sh taskrabbit/elasticsearch-dump -i ------>mismo caso anterior, montando volumen (se recomienda se llame "tmp" el del contenedor)
 
 ### Ejemplo estándar:
     docker run --rm -ti taskrabbit/elasticsearch-dump \
@@ -28,7 +28,7 @@
       --output-ca=/tmp/{PATH_CERTS_2}/certs/ca/ca.crt \
       --tlsAuth \
       --type=data
-* Se debe llamar el contenedor en modo interactivo, especificado --net =host, como se indica al principio.
+* Se debe llamar el contenedor en modo interactivo, especificado --network=host, como se indica al principio.
 * Se asume que **/tmp** es la carpeta en el contenedor donde se está montando el volumen, y que los endpoints de elastic se encuentran en **localhost**. Los path a certificados también pueden variar dependiendo de la configuración (es la default que se usa en este stack en particular).
 
 ## **Ejemplo Migrar índice llamando al contenedor "rabbit" (imagen original) desde host----->TODAVÍA NO FUNCIONA**
@@ -47,7 +47,7 @@
 * Se asume endpoints están en localhost.
 
 ### **TROUBLESHOOTING**:
-* Error "ERR! net  getaddrinfo ENOTFOUND"----->Al hacer build de la imagen docker npm no puede encontrar la url de los paquetes (https://registry.npmjs.org/). Solución:
+* Error "ERR! network getaddrinfo ENOTFOUND"----->Al hacer build de la imagen docker npm no puede encontrar la url de los paquetes (https://registry.npmjs.org/). Solución:
 	1. Verificar que la URL es accesible desde el host (con ping).
 	2. nmcli dev show | grep 'IP4.DNS' ------> Obtener servidor DNS del Host (si es que funciona)
 	3. sudo /etc/docker/daemon.json------>Incluir IP del servidor DNS del host en config del deamon de docker: ```json {"dns": ["IP_SERV_DNS_HOST","192.168.4.1", "8.8.8.8", "ETC."]}```
@@ -56,4 +56,4 @@
 	* refs: 
 		* https://stackoverflow.com/questions/39592908/error-getaddrinfo-enotfound-registry-npmjs-org-registry-npmjs-org443
 		* https://l-lin.github.io/post/2018/2018-09-03-docker_ubuntu_18_dns/
-		* https://stackoverflow.com/questions/24151129/net -calls-fail-during-image-build-on-corporate-net 
+		* https://stackoverflow.com/questions/24151129/network-calls-fail-during-image-build-on-corporate-network

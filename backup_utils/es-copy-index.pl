@@ -354,7 +354,7 @@ Print detailed help with examples
 
 =head2 Copy to different cluster
 
-   es-copy-index.pl --from localhost --to remoteuster.com --source logstash-2013.01.11
+   es-copy-index.pl --from localhost --to remote.cluster.com --source logstash-2013.01.11
 
 =head2 Rename an existing index
 
@@ -402,7 +402,7 @@ The B<incident-rt1234-2013.01.11> index will now hold all the data from both of 
 =head1 Query Syntax Extensions
 
 The search string is pre-analyzed before being sent to ElasticSearch.  The following plugins
-  to manipulate the query string and provide richer, more complete syntax for CLI applications.
+work to manipulate the query string and provide richer, more complete syntax for CLI applications.
 
 =head2 App::ElasticSearch::Utilities::QueryString::AutoEscape
 

@@ -16,7 +16,7 @@ instances:
   - name: kibana
     dns:
       - kibana
-      - staging.kibana. 
+      - staging.kibana.work.cl
       - localhost
     ip:
       - 127.0.0.1

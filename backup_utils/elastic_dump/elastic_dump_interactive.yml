@@ -3,4 +3,4 @@ services:
   elastic_dump_it:
     build:
       context: .
-      net : host
+      network: host

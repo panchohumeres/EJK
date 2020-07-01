@@ -16,15 +16,15 @@ services:
       - DOMAIN_ELASTIC=$DOMAIN_ELASTIC
     command: /bin/sh -c "/home/jovyan/.jupyter/jupyter-docker-entrypoint.sh"
     volumes:
-      - ./notebooks:/home/jovyan/ 
+      - ./notebooks:/home/jovyan/work
       - ${HOST_DATA_PATH}:/data
       - certs:/certs
       - ./jupyter:/home/jovyan/.jupyter/
-      - ./backup_utils:/home/jovyan/ /backup_kibana
-      - ./ETL:/home/jovyan/ /ETL
-      - ./CRONTAB:/home/jovyan/ /CRONTAB
-      - ./modules:/home/jovyan/ /modules
-      - ./args:/home/jovyan/ /args
+      - ./backup_utils:/home/jovyan/work/backup_kibana
+      - ./ETL:/home/jovyan/work/ETL
+      - ./CRONTAB:/home/jovyan/work/CRONTAB
+      - ./modules:/home/jovyan/work/modules
+      - ./args:/home/jovyan/work/args
 
   es01:
     #container_name: es01

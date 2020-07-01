@@ -34,5 +34,5 @@ RUN conda install --quiet --yes -c \
 RUN pip install -U elasticsearch
 
 
-VOLUME /home/jovyan/ 
-WORKDIR /home/jovyan/ 
+VOLUME /home/jovyan/work
+WORKDIR /home/jovyan/work
