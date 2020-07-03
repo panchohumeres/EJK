@@ -8,12 +8,22 @@
  - **Kibana**: Kibana  7.2 Container, which interacts with the Elasticsearch cluster, sharing TSL Certificates (for internal communication) and X-Pack.
  - **Nginx:** Nginx service 
 
+### Dependencies
+ - Docker and Docker-compose.
+ - node.js
+ - npm
+ - elastic dump [see install instructions](https://www.npmjs.com/package/elasticdump) 
+
 ## Setup 
  1. Create `.env` file and populate environment variables.Follow structure outlined in the [example .env file](example.env)
  2. `./bi-init.sh`--->Create the folders and internal TSL certificates necessary for **EJK** startup.
  3. Register 3 domains, for the Jupyter and Kibana endpoints, and the Elasticsearch REST API, all pointing to your **server/VM IP**.
  4. Change accordingly the environment variables on the `.env` file.
  5. `./certbot.sh`--->Create the SSL certificates and keystores for enabling **https** on the Kibana and Jupyter endpoints, and the Elasticsearch REST API.
+
+### Backup Utilities
+ - [**Elastic Dump**](https://www.npmjs.com/package/elasticdump): Node.js library for Elasticsearch index backup between clusters. Customized module in [backup_utils](./backup_utils/elastic_dump). Use `ebak.env` file with `elastic_backup.sh` for parametrized wrapper. See [ebak.env.EXAMPLE](./ebak.env.EXAMPLE) for example environment file.
+ - [**Kibana Backup**](./backup_utils/kibana): Backup for Kibana objects in Python 3, based on [kibana-backup-simple project](https://github.com/selivan/kibana-backup-simple).
  
 ## Startup
  6. `docker-compose up`--->Start the stack
