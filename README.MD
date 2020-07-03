@@ -24,28 +24,31 @@
 Relevant File structure
 ```
 📦EJK
-    ┃ 
-    ┃
-    ┣ 📂CRONTAB
-    ┃ ┣ 📂logs
-    ┣ 📂ETL
-    ┣ 📂backup_utils
-    ┃ ┣ 📂elastic_dump
-    ┃ ┣ 📂kibana
-    ┃ ┃ 
-    ┣ 📂certs
-    ┣ 📂jupyter
-    ┃ kkkkk
-    ┣ 📂modules
-    ┣ 📂nginx
-    ┃ ┣ 📂conf
-    ┃ ┣ 📂examples
-    ┣ 📜.gitignore
-    ┣ 📜LICENSE
-    ┣ 📜README.MD
-    ┣ 📜bi-init.sh
-    ┣ 📜certbot.sh
-    ┣ 📜docker-compose.yml
-    ┣ 📜ebak.env.EXAMPLE
-    ┣ 📜elastic_backup.sh
+┣ 📂CRONTAB
+┃  ┗ 📜crontab.sh
+┃  Crontab script, which runs on Jupyter container at startup. Edit for configuration of ETL scheduling.
+┃ ┣ 📂logs
+┃ Logs folder, where crontab status and output of Jupyter ETL scripts are stored.
+┣ 📂ETL
+┃ ETL scripts (jupyter notebooks)
+┣ 📂backup_utils
+┃ ┣ 📂elastic_dump
+┃ ┣ 📂kibana
+┃ ┃ 
+┣ 📂certs
+┣ 📂jupyter
+┃ Jupyter configuration files, including Dockerfile.
+┣ 📂modules
+┃ Custom python modules and classes.
+┣ 📂nginx
+┃ ┣ 📂conf
+┃ ┣ 📂examples
+┣ 📜.gitignore
+┣ 📜LICENSE
+┣ 📜README.MD
+┣ 📜bi-init.sh
+┣ 📜certbot.sh
+┣ 📜docker-compose.yml
+┣ 📜ebak.env.EXAMPLE
+┣ 📜elastic_backup.sh
 ```
