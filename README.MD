@@ -8,11 +8,12 @@
  - **Kibana**: Kibana  7.2 Container, which interacts with the Elasticsearch cluster, sharing TSL Certificates (for internal communication) and X-Pack.
  - **Nginx:** Nginx service 
 
-## Setup
- 1. `./bi-init.sh`--->Create the folders and internal TSL certificates necessary for **EJK** startup.
- 2. Register 3 domains, for the Jupyter and Kibana endpoints, and the Elasticsearch REST API, all pointing to your **server/VM IP**.
- 3. Change accordingly the environment variables on the `.env` file.
- 4. `./certbot.sh`--->Create the SSL certificates and keystores for enabling **https** on the Kibana and Jupyter endpoints, and the Elasticsearch REST API.
+## Setup 
+ 1. Create `.env` file and populate environment variables.Follow structure outlined in the [example .env file](example.env)
+ 2. `./bi-init.sh`--->Create the folders and internal TSL certificates necessary for **EJK** startup.
+ 3. Register 3 domains, for the Jupyter and Kibana endpoints, and the Elasticsearch REST API, all pointing to your **server/VM IP**.
+ 4. Change accordingly the environment variables on the `.env` file.
+ 5. `./certbot.sh`--->Create the SSL certificates and keystores for enabling **https** on the Kibana and Jupyter endpoints, and the Elasticsearch REST API.
  
 ## Startup
  6. `docker-compose up`--->Start the stack
@@ -55,8 +56,10 @@ Relevant File structure
 ┃    Certbot setup script.
 ┣ 📜docker-compose.yml
 ┃    Stack docker-compose file.
-┣ 📜ebak.env.EXAMPLE
-┃    Example of .env file.
+┣ 📜ebak.env
+┃    .env file for elastic dump utility.
+┣ 📜.env
+┃    .env file for EJK stack docker-compose file.
 ┗ 📜elastic_backup.sh
     Wrapper for elastic dump utility.
 ```
