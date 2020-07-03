@@ -22,7 +22,8 @@
 ## File Structure
 
 Relevant File structure
-`📦EJK
+```
+📦EJK
     ┃ 
     ┃
     ┣ 📂CRONTAB
@@ -46,4 +47,5 @@ Relevant File structure
     ┣ 📜certbot.sh
     ┣ 📜docker-compose.yml
     ┣ 📜ebak.env.EXAMPLE
-    ┣ 📜elastic_backup.sh`
+    ┣ 📜elastic_backup.sh
+```
