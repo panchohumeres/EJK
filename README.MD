@@ -23,27 +23,27 @@
 
 Relevant File structure
 📦EJK
- ┃ 
- ┃
- ┣ 📂CRONTAB
- ┃ ┣ 📂logs
- ┣ 📂ETL
- ┣ 📂backup_utils
- ┃ ┣ 📂elastic_dump
- ┃ ┣ 📂kibana
- ┃ ┃ 
- ┣ 📂certs
- ┣ 📂jupyter
- ┃ kkkkk
- ┣ 📂modules
- ┣ 📂nginx
- ┃ ┣ 📂conf
- ┃ ┣ 📂examples
- ┣ 📜.gitignore
- ┣ 📜LICENSE
- ┣ 📜README.MD
- ┣ 📜bi-init.sh
- ┣ 📜certbot.sh
- ┣ 📜docker-compose.yml
- ┣ 📜ebak.env.EXAMPLE
- ┣ 📜elastic_backup.sh
+    ┃ 
+    ┃
+    ┣ 📂CRONTAB
+    ┃ ┣ 📂logs
+    ┣ 📂ETL
+    ┣ 📂backup_utils
+    ┃ ┣ 📂elastic_dump
+    ┃ ┣ 📂kibana
+    ┃ ┃ 
+    ┣ 📂certs
+    ┣ 📂jupyter
+    ┃ kkkkk
+    ┣ 📂modules
+    ┣ 📂nginx
+    ┃ ┣ 📂conf
+    ┃ ┣ 📂examples
+    ┣ 📜.gitignore
+    ┣ 📜LICENSE
+    ┣ 📜README.MD
+    ┣ 📜bi-init.sh
+    ┣ 📜certbot.sh
+    ┣ 📜docker-compose.yml
+    ┣ 📜ebak.env.EXAMPLE
+    ┣ 📜elastic_backup.sh
