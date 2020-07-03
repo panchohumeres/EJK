@@ -25,30 +25,38 @@ Relevant File structure
 ```
 📦EJK
 ┣ 📂CRONTAB
-┃  ┗ 📜crontab.sh
-┃  Crontab script, which runs on Jupyter container at startup. Edit for configuration of ETL scheduling.
 ┃ ┣ 📂logs
-┃ Logs folder, where crontab status and output of Jupyter ETL scripts are stored.
+┃ ┃Logs folder, where crontab status and output of Jupyter ETL scripts are stored.
+┃ ┗ 📜crontab.sh
+┃   Crontab script, which runs on Jupyter container at startup. Edit for configuration of ETL scheduling.
 ┣ 📂ETL
-┃ ETL scripts (jupyter notebooks)
+┃  ETL scripts (jupyter notebooks)
 ┣ 📂backup_utils
 ┃ ┣ 📂elastic_dump
-┃ ┣ 📂kibana
-┃ ┃ 
+┃ ┃  Elastic dump utility (node.js).
+┃ ┗ 📂kibana
+┃   Kibana backup utility (python3)
 ┣ 📂certs
+┃  Docker-compose files for creating TSL certificates for internal communications between Elasticsearch-Kibana.
 ┣ 📂jupyter
-┃ Jupyter configuration files, including Dockerfile.
+┃   Jupyter configuration files, including Dockerfile.
 ┣ 📂modules
-┃ Custom python modules and classes.
+┃  Custom python modules and classes.
 ┣ 📂nginx
+┃  Nginx configuration files, including Dockerfile.
 ┃ ┣ 📂conf
-┃ ┣ 📂examples
-┣ 📜.gitignore
-┣ 📜LICENSE
-┣ 📜README.MD
+┃ ┃ ┣ 📜nginx-docker-entrypoint.sh
+┃ ┃ ┃   Script executed at nginx container startup. It substitutes parameters from .env file in virtual server configuration file.
+┃ ┃ ┗ 📜nginx.conf.template
+┃     Virtual server configuration file.
 ┣ 📜bi-init.sh
+┃   Stack setup script.
 ┣ 📜certbot.sh
+┃    Certbot setup script.
 ┣ 📜docker-compose.yml
+┃    Stack docker-compose file.
 ┣ 📜ebak.env.EXAMPLE
-┣ 📜elastic_backup.sh
+┃    Example of .env file.
+┗ 📜elastic_backup.sh
+    Wrapper for elastic dump utility.
 ```
