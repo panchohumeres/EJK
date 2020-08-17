@@ -28,7 +28,8 @@ RUN conda install --quiet --yes -c \
     pymongo \
     matplotlib \
     papermill \
-    seaborn
+    seaborn \
+    openpyxl
 
 
 RUN pip install -U elasticsearch

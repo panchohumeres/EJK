@@ -28,13 +28,24 @@ Business Intelligence stack, based on **Elasticsearch-Kibana** for **data wareho
  2. `docker-compose up`--->Start the stack
  3. `docker-compose up jupyter es01 es02 kibana`---->Start the stack in local mode (without nginx nor certbot, for testing in local environment).
  4. `docker-compose up --build`--->Start the stack recreating the services after changes in environment variables.
+## Documentación de ETL
+Ver [documentación particular](/ETLdocs/readme.md)
+
+
+
+
+
 
 ### Backup Utilities
  - [**Elastic Dump**](https://www.npmjs.com/package/elasticdump): Node.js library for Elasticsearch index backup between clusters. Customized module in [backup_utils](./backup_utils/elastic_dump). Use `ebak.env` file with `elastic_backup.sh` for parametrized wrapper. See [ebak.env.EXAMPLE](./ebak.env.EXAMPLE) for example environment file.
  - [**Kibana Backup**](./backup_utils/kibana): Backup for Kibana objects in Python 3, based on [kibana-backup-simple project](https://github.com/selivan/kibana-backup-simple).
 
 ## File Structure
+### Root de Jupyter Notebook
 
+Root de archivos de endpoint **Jupyter Notebook** (servido por el contenedor **Jupyter**):
+
+![](jupyter_root.png)
 Relevant File structure
 ```
 📦EJK

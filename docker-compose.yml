@@ -18,10 +18,12 @@ services:
     volumes:
       - ./notebooks:/home/jovyan/work
       - ${HOST_DATA_PATH}:/data
+      - ${HOST_DATA_PATH}/ETLcache:/home/jovyan/work/ETLcache
       - certs:/certs
       - ./jupyter:/home/jovyan/.jupyter/
       - ./backup_utils:/home/jovyan/work/backup_kibana
       - ./ETL:/home/jovyan/work/ETL
+      - ./ETLdocs:/home/jovyan/work/ETLdocs
       - ./CRONTAB:/home/jovyan/work/CRONTAB
       - ./modules:/home/jovyan/work/modules
       - ./args:/home/jovyan/work/args
@@ -87,6 +89,7 @@ services:
       - XPACK_SECURITY_AUDIT_ENABLED=true
       - XPACK_SECURITY_AUTHC_ANONYMOUS_ROLES=dashboard_only_custom
       - XPACK_SECURITY_AUTHC_ANONYMOUS_AUTHZ_EXCEPTION=true
+      - VEGA_ENABLEEXTERNALURLS=true
     ports:
       - ${KIBANA_PORT}:5601 #default 5601
     volumes: ['${HOST_DATA_PATH}/kibana_log:/var/log', 'certs:$CERTS_DIR']
