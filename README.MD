@@ -24,9 +24,10 @@ Business Intelligence stack, based on **Elasticsearch-Kibana** for **data wareho
  5. `./certbot.sh`--->Create the SSL certificates and keystores for enabling **https** on the Kibana and Jupyter endpoints, and the Elasticsearch REST API.
 
 ## Startup
- 6. `docker-compose up`--->Start the stack
- 7. `docker-compose up jupyter es01 es02 kibana`---->Start the stack in local mode (without nginx nor certbot, for testing in local environment).
- 8. `docker-compose up --build`--->Start the stack recreating the services after changes in environment variables.
+ 1. `sudo sysctl -w vm.max_map_count=262144`------->Java Virtual Memory Setting (ES-Kibana **won't start** without this!)
+ 2. `docker-compose up`--->Start the stack
+ 3. `docker-compose up jupyter es01 es02 kibana`---->Start the stack in local mode (without nginx nor certbot, for testing in local environment).
+ 4. `docker-compose up --build`--->Start the stack recreating the services after changes in environment variables.
 
 ### Backup Utilities
  - [**Elastic Dump**](https://www.npmjs.com/package/elasticdump): Node.js library for Elasticsearch index backup between clusters. Customized module in [backup_utils](./backup_utils/elastic_dump). Use `ebak.env` file with `elastic_backup.sh` for parametrized wrapper. See [ebak.env.EXAMPLE](./ebak.env.EXAMPLE) for example environment file.
