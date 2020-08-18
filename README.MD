@@ -32,7 +32,7 @@ Business Intelligence stack, based on **Elasticsearch-Kibana** for **data wareho
 ## ETL DOCS
 See [specific documentation](/ETLdocs/readme.md)
 
-### Google Sheets
+### Google Sheets Integration
 [Google Sheets](/GoogleSheets/readme.md) template (including Google Scripts funcions) for interacting with the Elasticsearch API via Google Sheets.
 
 ### Backup Utilities
@@ -42,10 +42,11 @@ See [specific documentation](/ETLdocs/readme.md)
 ## File Structure
 ### Root de Jupyter Notebook
 
-Root de archivos de endpoint **Jupyter Notebook** (servido por el contenedor **Jupyter**):
+Root of **Jupyter Notebook** endpoint (served by **Jupyter** container):
 
 ![](jupyter_root.png)
-Relevant File structure
+
+#### Relevant File structure
 ```
 📦EJK
 ┣ 📂CRONTAB
@@ -75,6 +76,8 @@ Relevant File structure
 ┃ ┃ ┃   Script executed at nginx container startup. It substitutes parameters from .env file in virtual server configuration file.
 ┃ ┃ ┗ 📜nginx.conf.template
 ┃     Virtual server configuration file.
+┣ 📂GoogleSheets
+┃  GoogleSheets template.
 ┣ 📜bi-init.sh
 ┃   Stack setup script.
 ┣ 📜certbot.sh
