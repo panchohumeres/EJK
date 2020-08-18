@@ -32,10 +32,8 @@ Business Intelligence stack, based on **Elasticsearch-Kibana** for **data wareho
 ## ETL DOCS
 See [specific documentation](/ETLdocs/readme.md)
 
-
-
-
-
+### Google Sheets
+[Google Sheets](/GoogleSheets/readme.md) template (including Google Scripts funcions) for interacting with the Elasticsearch API via Google Sheets.
 
 ### Backup Utilities
  - [**Elastic Dump**](https://www.npmjs.com/package/elasticdump): Node.js library for Elasticsearch index backup between clusters. Customized module in [backup_utils](./backup_utils/elastic_dump). Use `ebak.env` file with `elastic_backup.sh` for parametrized wrapper. See [ebak.env.EXAMPLE](./ebak.env.EXAMPLE) for example environment file.
