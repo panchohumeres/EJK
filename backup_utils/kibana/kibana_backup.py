@@ -46,7 +46,6 @@ def restore(kibana_url, user, password, text):
             else:
                 print('OK')
 
-
 if __name__ == '__main__':
     args_parser = argparse.ArgumentParser(
         description='Backup and restore Kibana saved objects. Writes backup to stdout and reads from stdin.')
