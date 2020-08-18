@@ -111,3 +111,4 @@ Root of **Jupyter Notebook** endpoint (served by **Jupyter** container):
       * **References**:
          - https://github.com/jupyter/docker-stacks/issues/114
          - https://discourse.jupyter.org/t/what-is-with-the-weird-jovyan-user/1673
+* If Kibana container fails to start, due to Elasticsearch not ready yet (**"GREEN"** status in logs if it is ready), simply: `docker-compose up kibana` after cluster is ready.
