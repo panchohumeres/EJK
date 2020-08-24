@@ -20,6 +20,9 @@ docker-compose -f ./certs/create-certs.yml run --rm create_certs
 
 echo "changing ownership of certificates files (for docker execution)"
 
+echo "creating ETLcache dir"
+mkdir ${CERTBOT_PATH}/ETLcache
+echo "changing ownership of ETLcache dirs (for docker execution)"
 
 sudo chmod -R g+rwx ${HOST_DATA_PATH}
 sudo chgrp -R ${UID} ${HOST_DATA_PATH}

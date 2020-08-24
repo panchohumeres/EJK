@@ -14,19 +14,24 @@ services:
       - PASSWORD=$JUPYTER_PSSWD
       - JUPYTER_ALLOW_ORIGIN=$JUPYTER_ALLOW_ORIGIN
       - DOMAIN_ELASTIC=$DOMAIN_ELASTIC
+      - S3_ACCESS_KEY=$S3_ACCESS_KEY
+      - S3_SECRET_KEY=$S3_SECRET_KEY
+      - S3_BUCKET=$S3_BUCKET
     command: /bin/sh -c "/home/jovyan/.jupyter/jupyter-docker-entrypoint.sh"
     volumes:
-      - ./notebooks:/home/jovyan/work
+      - ${PWD}/notebooks:/home/jovyan/work
       - ${HOST_DATA_PATH}:/data
       - ${HOST_DATA_PATH}/ETLcache:/home/jovyan/work/ETLcache
-      - certs:/certs
-      - ./jupyter:/home/jovyan/.jupyter/
-      - ./backup_utils:/home/jovyan/work/backup_kibana
-      - ./ETL:/home/jovyan/work/ETL
-      - ./ETLdocs:/home/jovyan/work/ETLdocs
-      - ./CRONTAB:/home/jovyan/work/CRONTAB
-      - ./modules:/home/jovyan/work/modules
-      - ./args:/home/jovyan/work/args
+      - ${PWD}/notebooks:/home/jovyan/work
+      - ${HOST_DATA_PATH}:/data
+      - ${HOST_DATA_PATH}/ETLcache:/home/jovyan/work/ETLcache
+      - ${PWD}/jupyter:/home/jovyan/.jupyter/
+      - ${PWD}/backup_utils:/home/jovyan/work/backup
+      - ${PWD}/ETL:/home/jovyan/work/ETL
+      - ${PWD}/ETLdocs:/home/jovyan/work/ETLdocs
+      - ${PWD}/CRONTAB:/home/jovyan/work/CRONTAB
+      - ${PWD}/modules:/home/jovyan/work/modules
+      - ${PWD}/args:/home/jovyan/work/args
 
   es01:
     #container_name: es01

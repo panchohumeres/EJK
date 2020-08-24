@@ -40,10 +40,7 @@ See [specific documentation](/ETLdocs/readme.md)
  - [**Kibana Backup**](./backup_utils/kibana): Backup for Kibana objects in Python 3, based on [kibana-backup-simple project](https://github.com/selivan/kibana-backup-simple).
 
 ## File Structure
-### Root de Jupyter Notebook
-
 Root of **Jupyter Notebook** endpoint (served by **Jupyter** container):
-
 ![](jupyter_root.png)
 
 #### Relevant File structure
