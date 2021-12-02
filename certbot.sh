@@ -10,8 +10,30 @@ set +a
 
 echo "                                    "
 
+var=${1:-nada} #DEFAULT ARGUMENT "NADA"-->NOTHING
 
-domains=(${DOMAIN_KIBANA} ${DOMAIN_JUPYTER} ${DOMAIN_ELASTIC})
+#THIS LOOPS THROUGH CLI ARGUMENTS IN CASE THEY EXIST
+#DOMAIN NAMES ARE EXTRACTED FROM THERE AND DEFAULT IS NOT USED (ALL DOMAIN NAMES IN .ENV FILE)
+if [ "$var" == "nada" ]; then #if no CLI arguments (i.e. domains) ALL DOMAINS IN .ENV FILE are passed
+    echo "no CLI arguments provided, setting all domain variables (Elastic-Jupyter-Kibana) from .env file"
+    domains=(${DOMAIN_KIBANA} ${DOMAIN_JUPYTER} ${DOMAIN_ELASTIC})
+
+else
+    domains=() #create array of domains
+    for a in "$@" #loop through the array of domains
+    do
+        a=${a#*-} #remove "-" prefix from CLI argument
+        domains+=( ${a} ) #add term without the prefix to domains array
+    done
+
+    for i in "${!domains[@]}"; do #loop through the array of domains (by index)
+       domains[$i]="DOMAIN_${domains[$i]^^}" #uppercase domain element and concatenate to "DOMAIN" literal
+    done
+
+    for i in "${!domains[@]}"; do #loop again through the array of domains (by index)
+        domains[$i]="${!domains[$i]}" #expand to variable name so as to get the value of the domain name
+    done
+
 data_path=${CERTBOT_PATH}
 email=${email}
 

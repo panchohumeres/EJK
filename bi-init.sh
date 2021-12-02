@@ -13,10 +13,33 @@ sudo chmod -R g+rwx ${CERTBOT_PATH}
 sudo chgrp -R ${UID} ${CERTBOT_PATH}
 sudo chown -R ${UID} ${CERTBOT_PATH}
 
+var=${1:-nada} #DEFAULT ARGUMENT "NADA"-->NOTHING
 
-#CREATE CERTIFICATES FOR INTERNAL ELASTICSEARCH-KIBANA COMMUNICATION (TSL LAYER)
-echo "creating certificates for TSL internal layer of stack"
-docker-compose -f ./certs/create-certs.yml run --rm create_certs
+#THIS LOOPS THROUGH CLI ARGUMENTS IN CASE THEY EXIST
+#if "elastic" not in arguments, do not run TSL Internal layer certificates code
+if [ "$var" == "nada" ]; then 
+    #CREATE CERTIFICATES FOR INTERNAL ELASTICSEARCH-KIBANA COMMUNICATION (TSL LAYER)
+    echo "creating certificates for TSL internal layer of stack"
+    docker-compose -f ./certs/create-certs.yml run --rm create_certs
+else
+    el=0
+    args=() #create array of domains
+    for a in "$@" #loop through the array of domains
+    do
+        a=${a#*-} #remove "-" prefix from CLI argument
+        if [[ "${a^^}" == "ELASTIC"  ]]; then
+            #CREATE CERTIFICATES FOR INTERNAL ELASTICSEARCH-KIBANA COMMUNICATION (TSL LAYER)
+            echo "creating certificates for TSL internal layer of stack"
+            #docker-compose -f ./certs/create-certs.yml run --rm create_certs
+            el+=1
+        fi
+
+    done
+
+    if [ $el == 0 ]; then
+        echo "'elastic' or 'ELASTIC' not in the arguments, not creating certificates for TSL internal layer of stack"
+    fi
+fi
 
 echo "changing ownership of certificates files (for docker execution)"
 
