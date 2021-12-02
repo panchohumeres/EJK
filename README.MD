@@ -11,13 +11,18 @@ Business Intelligence stack, based on **Elasticsearch-Kibana** for **data wareho
  - **Certbot:** Custom docker container for configuration of **https** SSL certificates, and automating its renewal. Based on [nginx-certbot project](https://github.com/wmnnd/nginx-certbot)
 
 ### Dependencies
+ - Tested on Ubuntu 20.4
  - Docker and Docker-compose.
+   See:
+      - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
+      - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04
  - node.js
  - npm
  - elastic dump [see install instructions](https://www.npmjs.com/package/elasticdump) 
 
 ## Setup 
  1. Create `.env` file and populate environment variables.Follow structure outlined in the [example .env file](example.env)
+ 2. mdkir data at root folder (same directory level as repo)
  2. `./bi-init.sh`--->Create the folders and internal TSL certificates necessary for **EJK** startup.
  3. Register 3 domains, for the Jupyter and Kibana endpoints, and the Elasticsearch REST API, all pointing to your **server/VM IP**.
  4. Change accordingly the environment variables on the `.env` file.
@@ -28,6 +33,11 @@ Business Intelligence stack, based on **Elasticsearch-Kibana** for **data wareho
  2. `docker-compose up`--->Start the stack
  3. `docker-compose up jupyter es01 es02 kibana`---->Start the stack in local mode (without nginx nor certbot, for testing in local environment).
  4. `docker-compose up --build`--->Start the stack recreating the services after changes in environment variables.
+
+ ## Kibana special setup after Startup (guest dashboard viewer)
+ 1. create role with **read** access to desired index(es).
+ 2. create **guest**, with password specified in .env file (Base64 byte decode string in `KIBANA_GUEST_AUTH` config.)
+ 3. create **guest** user and assign the guest role created in 1, and `kibana_dashboard_only_user`.
 
 ## ETL DOCS
 See [specific documentation](/ETLdocs/readme.md)
@@ -108,4 +118,16 @@ Root of **Jupyter Notebook** endpoint (served by **Jupyter** container):
       * **References**:
          - https://github.com/jupyter/docker-stacks/issues/114
          - https://discourse.jupyter.org/t/what-is-with-the-weird-jovyan-user/1673
+* **SSL Certificates**:
+   - When ./certbot.sh cannot create certificates for endpoints, it might be due to filesystem permissions problems.
+      * **Diagnostic**:
+         1. cd into either `certbot` or `certificates` folders in `data` folder.
+         2. Check permissions in folders : `ls -all`
+         3. See if there are different patterns compared to other folders.
+      * **Solution**, either:
+         - **Copy permissions from a folder that works**
+            * See jupyter solution
+         - **Change the owner of the folders to UID==1000**
+            * See jupyter solution.
+
 * If Kibana container fails to start, due to Elasticsearch not ready yet (**"GREEN"** status in logs if it is ready), simply: `docker-compose up kibana` after cluster is ready.
