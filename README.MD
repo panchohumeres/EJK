@@ -45,7 +45,17 @@ See [specific documentation](/ETLdocs/readme.md)
 ### Google Sheets Integration
 [Google Sheets](/GoogleSheets/readme.md) template (including Google Scripts funcions) for interacting with the Elasticsearch API via Google Sheets.
 
-### Backup Utilities
+### Backup & Utilities
+ - For Kibana dashboards backup:
+   1. Kibana Toolbar ---> Management ----> Saved Objects
+   2. Select Index Patterns, Visualizations and Dashboards associated with the Dashboard to be exported.
+   3. Save the export (.ndjson) to the backups_utils ---> backups folder if you wish.
+   4. To restore back again:
+      1 - In "Saved Objects" panel in Kibana (new server, where you are migrating the stack), create an index pattern corresponding to the index of the new data (assuming you already have created it).
+      2 - Export it alone.
+      3 - Find the "id" property, copy the hash.
+      4 - In the old dashboard .ndjson file, finde the index pattern hash, and replace it with the one found in step 3.
+      4 - Import all the backed-up .ndjson items via Kibana.
  - [**Elastic Dump**](https://www.npmjs.com/package/elasticdump): Node.js library for Elasticsearch index backup between clusters. Customized module in [backup_utils](./backup_utils/elastic_dump). Use `ebak.env` file with `elastic_backup.sh` for parametrized wrapper. See [ebak.env.EXAMPLE](./ebak.env.EXAMPLE) for example environment file.
  - [**Kibana Backup**](./backup_utils/kibana): Backup for Kibana objects in Python 3, based on [kibana-backup-simple project](https://github.com/selivan/kibana-backup-simple).
 
